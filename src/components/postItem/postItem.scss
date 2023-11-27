@@ -1,0 +1,13 @@
+.item {
+  &__wrapper {
+    width: 50rem;
+    padding: 1rem 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 3rem;
+    box-shadow: 0rem 0rem 0.5rem 0.01rem rgba(0, 0, 0, 0.5);
+  }
+  &__body {
+    flex-grow: 1;
+  }
+}
