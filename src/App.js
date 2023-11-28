@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 
 import PostList from "./components/postList/PostList";
 
@@ -33,10 +33,15 @@ function App() {
   ]);
 
   const [post, setPost] = useState({
-    postTitle: "",
     id: "",
     title: "",
     body: "",
+  });
+
+  const [error, setError] = useState({
+    errorId: "",
+    errorTitle: "",
+    errorBody: "",
   });
 
   const addPost = (e) => {
@@ -47,14 +52,46 @@ function App() {
     setPost({ ...post, [e.target.name]: target });
   };
 
+  const isValidate = () => {
+    if (!post.id || post.id.length < 4) {
+      setError({
+        ...error,
+        errorId: "id is to short or dosn't exist",
+      });
+      return;
+    } else {
+      setError({ ...error, errorId: "" });
+    }
+
+    // if (!post.title && post.title.length < 7) {
+    //   console.log("title is to short or dosn't exist");
+    //   return;
+    // }
+
+    // if (!post.body && post.body.length < 15) {
+    //   console.log("body is to short or dosn't exist");
+    //   return;
+    // }
+  };
+
   const addPostAtPosts = (e) => {
     e.preventDefault();
-    setPosts([...posts, post]);
-    setPost({
-      id: "",
-      title: "",
-      body: "",
-    });
+
+    if (!post.id) {
+      setError({
+        ...error,
+        errorId: "id is to short or dosn't exist",
+      });
+      return;
+    } else {
+      setPosts([...posts, post]);
+
+      setPost({
+        id: "",
+        title: "",
+        body: "",
+      });
+    }
   };
 
   const formRef = useRef();
@@ -67,35 +104,33 @@ function App() {
     <div className="App">
       <form ref={refForm}>
         <input
-          required
           type="text"
           placeholder="set post id"
           name="id"
           value={post.id}
           onChange={addPost}
+          onBlur={isValidate}
         />
+        {error.errorId ? (
+          <p style={{ color: "red" }}>id is to short or dosnt exist</p>
+        ) : null}
         <input
-          required
           type="text"
           placeholder="set post title"
           name="title"
           value={post.title}
           onChange={addPost}
+          onBlur={isValidate}
         />
         <input
-          required
           type="text"
           placeholder="set post body"
           name="body"
           value={post.body}
           onChange={addPost}
+          onBlur={isValidate}
         />
-        <button
-          type="submit"
-          onClick={(e) => {
-            addPostAtPosts(e);
-          }}
-        >
+        <button type="submit" onClick={addPostAtPosts}>
           add post
         </button>
       </form>
