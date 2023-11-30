@@ -1,10 +1,9 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 
 import PostList from "./components/postList/PostList";
 import Form from "./components/form/Form";
 import Divider from "./components/divider/Divider";
-import Select from "./components/UI/select/Select";
-import Search from "./components/search/Search";
+import PostFilter from "./components/postFilter/PostFilter";
 
 import "./styles/App.scss";
 
@@ -36,29 +35,27 @@ function App() {
     },
   ]);
 
-  const [filter, setFilter] = useState("");
+  const [filter, setFilter] = useState({ sort: "", searchStr: "" });
 
-  const sortedPosts = (posts, filter) => {
-    if (!filter) {
+  const sortedPosts = useMemo(() => {
+    if (!filter.sort) {
       return posts;
     }
 
-    if (filter === "title") {
+    if (filter.sort === "title") {
       const newPosts = [...posts];
       return newPosts.sort((a, b) => (a.title > b.title ? 1 : -1));
     }
 
-    if (filter === "body") {
+    if (filter.sort === "body") {
       const newPosts = [...posts];
       return newPosts.sort((a, b) => (a.body > b.body ? 1 : -1));
     }
 
-    if (filter === "default") {
+    if (filter.sort === "default") {
       return posts;
     }
-  };
-
-  const [searchStr, setSearchStr] = useState("");
+  }, [posts, filter.sort]);
 
   const searchPostByTitle = (posts, searchStr) => {
     return posts.filter((post) =>
@@ -70,20 +67,10 @@ function App() {
     <div className="App">
       <Form setPosts={setPosts} posts={posts} />
       <Divider />
-      <Search searchStr={searchStr} setSearchStr={setSearchStr} />
-      <Select
-        options={[
-          { value: "title", name: "По названию" },
-          { value: "body", name: "По описанию" },
-          { value: "default", name: "По умолчанию" },
-        ]}
-        defaultValue="Сортировка по..."
-        filter={filter}
-        setFilter={setFilter}
-      />
+      <PostFilter filter={filter} setFilter={setFilter} />
       <PostList
         postList={{
-          sortedPosts: searchPostByTitle(sortedPosts(posts, filter), searchStr),
+          sortedPosts: searchPostByTitle(sortedPosts, filter.searchStr),
           title,
         }}
         setPosts={setPosts}

@@ -1,5 +1,3 @@
-import React, { useEffect } from "react";
-
 import PostItem from "../postItem/PostItem";
 import EmptyPostListTitle from "../emptyPostListTitle/EmptyPostListTitle";
 

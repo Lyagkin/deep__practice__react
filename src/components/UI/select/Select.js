@@ -1,5 +1,3 @@
-import React, { useEffect, useState } from "react";
-
 import classes from "./Select.module.scss";
 
 const Select = (props) => {
@@ -9,8 +7,8 @@ const Select = (props) => {
     <div className={classes.SelectWrapper}>
       <select
         className={classes.Select}
-        value={filter}
-        onChange={(e) => setFilter(e.target.value)}
+        value={filter.sort}
+        onChange={(e) => setFilter({ ...filter, sort: e.target.value })}
       >
         <option disabled value="">
           {defaultValue}
