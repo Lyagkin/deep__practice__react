@@ -1,6 +1,9 @@
-import { useState, useRef, useEffect } from "react";
+import { useState } from "react";
 
 import PostList from "./components/postList/PostList";
+import Form from "./components/form/Form";
+import Divider from "./components/divider/Divider";
+import Select from "./components/UI/select/Select";
 
 import "./styles/App.scss";
 
@@ -13,128 +16,65 @@ function App() {
     {
       id: 1,
       title: "JavaScript",
-      body: "JavaScript - this is programming language. Lorem ipsum, dolor sit amet consectetur adipisicing elit. Ratione consequuntur autem, officia accusamus veritatis, velit unde porro, molestias quos ab eveniet impedit et natus sapiente quo dolor suscipit animi sunt?",
+      body: "First, JavaScript - this is programming language. Lorem ipsum, dolor sit amet consectetur adipisicing elit. Ratione consequuntur autem, officia accusamus veritatis, velit unde porro, molestias quos ab eveniet impedit et natus sapiente quo dolor suscipit animi sunt?",
     },
     {
       id: 2,
       title: "Phyton",
-      body: "Phyton - this is programming language. Lorem ipsum, dolor sit amet consectetur adipisicing elit. Ratione consequuntur autem, officia accusamus veritatis, velit unde porro, molestias quos ab eveniet impedit et natus sapiente quo dolor suscipit animi sunt?",
+      body: "By the way, Phyton - this is programming language. Lorem ipsum, dolor sit amet consectetur adipisicing elit. Ratione consequuntur autem, officia accusamus veritatis, velit unde porro, molestias quos ab eveniet impedit et natus sapiente quo dolor suscipit animi sunt?",
     },
     {
       id: 3,
       title: "C++",
-      body: "C++ - this is programming language. Lorem ipsum, dolor sit amet consectetur adipisicing elit. Ratione consequuntur autem, officia accusamus veritatis, velit unde porro, molestias quos ab eveniet impedit et natus sapiente quo dolor suscipit animi sunt?",
+      body: "About, C++ - this is programming language. Lorem ipsum, dolor sit amet consectetur adipisicing elit. Ratione consequuntur autem, officia accusamus veritatis, velit unde porro, molestias quos ab eveniet impedit et natus sapiente quo dolor suscipit animi sunt?",
     },
     {
       id: 4,
       title: "Next",
-      body: "Next - this is programming language. Lorem ipsum, dolor sit amet consectetur adipisicing elit. Ratione consequuntur autem, officia accusamus veritatis, velit unde porro, molestias quos ab eveniet impedit et natus sapiente quo dolor suscipit animi sunt?",
+      body: "So, Next - this is programming language. Lorem ipsum, dolor sit amet consectetur adipisicing elit. Ratione consequuntur autem, officia accusamus veritatis, velit unde porro, molestias quos ab eveniet impedit et natus sapiente quo dolor suscipit animi sunt?",
     },
   ]);
 
-  const [post, setPost] = useState({
-    id: "",
-    title: "",
-    body: "",
-  });
+  const [filter, setFilter] = useState("");
 
-  const [error, setError] = useState({
-    errorId: "",
-    errorTitle: "",
-    errorBody: "",
-  });
-
-  const addPost = (e) => {
-    e.preventDefault();
-
-    const target = e.target.value;
-
-    setPost({ ...post, [e.target.name]: target });
-  };
-
-  const isValidate = () => {
-    if (!post.id || post.id.length < 4) {
-      setError({
-        ...error,
-        errorId: "id is to short or dosn't exist",
-      });
-      return;
-    } else {
-      setError({ ...error, errorId: "" });
+  const sortedPosts = (posts, filter) => {
+    if (!filter) {
+      return posts;
     }
 
-    // if (!post.title && post.title.length < 7) {
-    //   console.log("title is to short or dosn't exist");
-    //   return;
-    // }
-
-    // if (!post.body && post.body.length < 15) {
-    //   console.log("body is to short or dosn't exist");
-    //   return;
-    // }
-  };
-
-  const addPostAtPosts = (e) => {
-    e.preventDefault();
-
-    if (!post.id) {
-      setError({
-        ...error,
-        errorId: "id is to short or dosn't exist",
-      });
-      return;
-    } else {
-      setPosts([...posts, post]);
-
-      setPost({
-        id: "",
-        title: "",
-        body: "",
-      });
+    if (filter === "title") {
+      const newPosts = [...posts];
+      return newPosts.sort((a, b) => (a.title > b.title ? 1 : -1));
     }
-  };
 
-  const formRef = useRef();
+    if (filter === "body") {
+      const newPosts = [...posts];
+      return newPosts.sort((a, b) => (a.body > b.body ? 1 : -1));
+    }
 
-  const refForm = (el) => {
-    formRef.current = el;
+    if (filter === "default") {
+      return posts;
+    }
   };
 
   return (
     <div className="App">
-      <form ref={refForm}>
-        <input
-          type="text"
-          placeholder="set post id"
-          name="id"
-          value={post.id}
-          onChange={addPost}
-          onBlur={isValidate}
-        />
-        {error.errorId ? (
-          <p style={{ color: "red" }}>id is to short or dosnt exist</p>
-        ) : null}
-        <input
-          type="text"
-          placeholder="set post title"
-          name="title"
-          value={post.title}
-          onChange={addPost}
-          onBlur={isValidate}
-        />
-        <input
-          type="text"
-          placeholder="set post body"
-          name="body"
-          value={post.body}
-          onChange={addPost}
-          onBlur={isValidate}
-        />
-        <button type="submit" onClick={addPostAtPosts}>
-          add post
-        </button>
-      </form>
-      <PostList postList={{ posts, title }} />
+      <Form setPosts={setPosts} posts={posts} />
+      <Divider />
+      <Select
+        options={[
+          { value: "title", name: "По названию" },
+          { value: "body", name: "По описанию" },
+          { value: "default", name: "По умолчанию" },
+        ]}
+        defaultValue="Сортировка по..."
+        filter={filter}
+        setFilter={setFilter}
+      />
+      <PostList
+        postList={{ sortedPosts: sortedPosts(posts, filter), title }}
+        setPosts={setPosts}
+      />
     </div>
   );
 }
