@@ -6,6 +6,8 @@ import Divider from "./components/divider/Divider";
 import PostFilter from "./components/postFilter/PostFilter";
 
 import "./styles/App.scss";
+import Modal from "./components/modal/Modal";
+import Button from "./components/UI/button/Button";
 
 function App() {
   const [title, setTitle] = useState(
@@ -34,6 +36,8 @@ function App() {
       body: "So, Next - this is programming language. Lorem ipsum, dolor sit amet consectetur adipisicing elit. Ratione consequuntur autem, officia accusamus veritatis, velit unde porro, molestias quos ab eveniet impedit et natus sapiente quo dolor suscipit animi sunt?",
     },
   ]);
+
+  const [modal, setModal] = useState(false);
 
   const [filter, setFilter] = useState({ sort: "", searchStr: "" });
 
@@ -65,7 +69,15 @@ function App() {
 
   return (
     <div className="App">
-      <Form setPosts={setPosts} posts={posts} />
+      <Button
+        style={{ marginLeft: "4rem" }}
+        onClick={() => setModal((modal) => !modal)}
+      >
+        Добавить пост
+      </Button>
+      <Modal visible={modal} setVisible={setModal}>
+        <Form setPosts={setPosts} posts={posts} setModal={setModal} />
+      </Modal>
       <Divider />
       <PostFilter filter={filter} setFilter={setFilter} />
       <PostList

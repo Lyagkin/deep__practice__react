@@ -8,7 +8,7 @@ import Button from "../UI/button/Button";
 import "./form.scss";
 
 const Form = (props) => {
-  const { setPosts, posts } = props;
+  const { setPosts, posts, setModal } = props;
 
   const [post, setPost] = useState({
     id: "",
@@ -39,6 +39,8 @@ const Form = (props) => {
       title: "",
       body: "",
     });
+
+    setModal((modal) => !modal);
   };
 
   return (
@@ -59,7 +61,11 @@ const Form = (props) => {
           value={post.body}
           onChange={addPost}
         />
-        <Button type="submit" onClick={addPostAtPosts}>
+        <Button
+          style={{ backgroundColor: "rgba(210, 205, 203, 0.688)" }}
+          type="submit"
+          onClick={addPostAtPosts}
+        >
           Add post
         </Button>
       </form>
