@@ -4,6 +4,7 @@ import PostList from "./components/postList/PostList";
 import Form from "./components/form/Form";
 import Divider from "./components/divider/Divider";
 import Select from "./components/UI/select/Select";
+import Search from "./components/search/Search";
 
 import "./styles/App.scss";
 
@@ -57,10 +58,19 @@ function App() {
     }
   };
 
+  const [searchStr, setSearchStr] = useState("");
+
+  const searchPostByTitle = (posts, searchStr) => {
+    return posts.filter((post) =>
+      post.title.toLowerCase().includes(searchStr.toLowerCase()),
+    );
+  };
+
   return (
     <div className="App">
       <Form setPosts={setPosts} posts={posts} />
       <Divider />
+      <Search searchStr={searchStr} setSearchStr={setSearchStr} />
       <Select
         options={[
           { value: "title", name: "По названию" },
@@ -72,7 +82,10 @@ function App() {
         setFilter={setFilter}
       />
       <PostList
-        postList={{ sortedPosts: sortedPosts(posts, filter), title }}
+        postList={{
+          sortedPosts: searchPostByTitle(sortedPosts(posts, filter), searchStr),
+          title,
+        }}
         setPosts={setPosts}
       />
     </div>

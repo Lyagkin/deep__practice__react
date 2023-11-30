@@ -6,7 +6,6 @@ import EmptyPostListTitle from "../emptyPostListTitle/EmptyPostListTitle";
 import "./postList.scss";
 
 const PostList = (props) => {
-  console.log("post");
   const { postList, setPosts } = props;
 
   const deletePost = (id) => {
