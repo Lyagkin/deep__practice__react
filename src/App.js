@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 
 import PostList from "./components/postList/PostList";
 import Form from "./components/form/Form";
@@ -9,38 +9,25 @@ import "./styles/App.scss";
 import Modal from "./components/modal/Modal";
 import Button from "./components/UI/button/Button";
 import { usePosts } from "./hooks/usePosts";
+import PostService from "./API/PostService";
 
 function App() {
   const [title, setTitle] = useState(
     "Posts list about programming luanguages:",
   );
-
-  const [posts, setPosts] = useState([
-    {
-      id: 1,
-      title: "JavaScript",
-      body: "First, JavaScript - this is programming language. Lorem ipsum, dolor sit amet consectetur adipisicing elit. Ratione consequuntur autem, officia accusamus veritatis, velit unde porro, molestias quos ab eveniet impedit et natus sapiente quo dolor suscipit animi sunt?",
-    },
-    {
-      id: 2,
-      title: "Phyton",
-      body: "By the way, Phyton - this is programming language. Lorem ipsum, dolor sit amet consectetur adipisicing elit. Ratione consequuntur autem, officia accusamus veritatis, velit unde porro, molestias quos ab eveniet impedit et natus sapiente quo dolor suscipit animi sunt?",
-    },
-    {
-      id: 3,
-      title: "C++",
-      body: "About, C++ - this is programming language. Lorem ipsum, dolor sit amet consectetur adipisicing elit. Ratione consequuntur autem, officia accusamus veritatis, velit unde porro, molestias quos ab eveniet impedit et natus sapiente quo dolor suscipit animi sunt?",
-    },
-    {
-      id: 4,
-      title: "Next",
-      body: "So, Next - this is programming language. Lorem ipsum, dolor sit amet consectetur adipisicing elit. Ratione consequuntur autem, officia accusamus veritatis, velit unde porro, molestias quos ab eveniet impedit et natus sapiente quo dolor suscipit animi sunt?",
-    },
-  ]);
-
+  const [posts, setPosts] = useState([]);
   const [modal, setModal] = useState(false);
   const [filter, setFilter] = useState({ sort: "", searchStr: "" });
   const sortedAndSearchedPosts = usePosts(posts, filter.sort, filter.searchStr);
+
+  async function fetchPosts() {
+    const posts = await PostService.getAll();
+    setPosts(posts);
+  }
+
+  useEffect(() => {
+    fetchPosts();
+  }, []);
 
   return (
     <div className="App">
