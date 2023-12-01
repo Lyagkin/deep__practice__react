@@ -8,6 +8,7 @@ import PostFilter from "./components/postFilter/PostFilter";
 import "./styles/App.scss";
 import Modal from "./components/modal/Modal";
 import Button from "./components/UI/button/Button";
+import { usePosts } from "./hooks/usePosts";
 
 function App() {
   const [title, setTitle] = useState(
@@ -41,31 +42,7 @@ function App() {
 
   const [filter, setFilter] = useState({ sort: "", searchStr: "" });
 
-  const sortedPosts = useMemo(() => {
-    if (!filter.sort) {
-      return posts;
-    }
-
-    if (filter.sort === "title") {
-      const newPosts = [...posts];
-      return newPosts.sort((a, b) => (a.title > b.title ? 1 : -1));
-    }
-
-    if (filter.sort === "body") {
-      const newPosts = [...posts];
-      return newPosts.sort((a, b) => (a.body > b.body ? 1 : -1));
-    }
-
-    if (filter.sort === "default") {
-      return posts;
-    }
-  }, [posts, filter.sort]);
-
-  const searchPostByTitle = (posts, searchStr) => {
-    return posts.filter((post) =>
-      post.title.toLowerCase().includes(searchStr.toLowerCase()),
-    );
-  };
+  const sortedAndSearchedPosts = usePosts(posts, filter.sort, filter.searchStr);
 
   return (
     <div className="App">
@@ -82,7 +59,7 @@ function App() {
       <PostFilter filter={filter} setFilter={setFilter} />
       <PostList
         postList={{
-          sortedPosts: searchPostByTitle(sortedPosts, filter.searchStr),
+          sortedPosts: sortedAndSearchedPosts(),
           title,
         }}
         setPosts={setPosts}
