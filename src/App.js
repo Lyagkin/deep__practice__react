@@ -6,11 +6,12 @@ import Divider from "./components/divider/Divider";
 import PostFilter from "./components/postFilter/PostFilter";
 
 import "./styles/App.scss";
-import Modal from "./components/modal/Modal";
+import Modal from "./components/UI/modal/Modal";
 import Button from "./components/UI/button/Button";
 import { usePosts } from "./hooks/usePosts";
 import PostService from "./API/PostService";
 import Loader from "./components/UI/Loader/Loader";
+import { useFetching } from "./hooks/useFetching";
 
 function App() {
   const [title, setTitle] = useState(
@@ -19,17 +20,11 @@ function App() {
   const [posts, setPosts] = useState([]);
   const [modal, setModal] = useState(false);
   const [filter, setFilter] = useState({ sort: "", searchStr: "" });
-  const [isPostLoading, setIsPostLoading] = useState(false);
   const sortedAndSearchedPosts = usePosts(posts, filter.sort, filter.searchStr);
-
-  async function fetchPosts() {
-    setIsPostLoading(true);
-    setTimeout(async () => {
-      const posts = await PostService.getAll();
-      setPosts(posts);
-      setIsPostLoading(false);
-    }, 1000);
-  }
+  const [fetchPosts, isPostLoading, postError] = useFetching(async () => {
+    const posts = await PostService.getAll();
+    setPosts(posts);
+  });
 
   useEffect(() => {
     fetchPosts();
@@ -48,6 +43,7 @@ function App() {
       </Modal>
       <Divider />
       <PostFilter filter={filter} setFilter={setFilter} />
+      {postError && <h1 style={{ textAlign: "center" }}>{postError}</h1>}
       {isPostLoading ? (
         <Loader />
       ) : (
