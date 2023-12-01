@@ -10,6 +10,7 @@ import Modal from "./components/modal/Modal";
 import Button from "./components/UI/button/Button";
 import { usePosts } from "./hooks/usePosts";
 import PostService from "./API/PostService";
+import Loader from "./components/UI/Loader/Loader";
 
 function App() {
   const [title, setTitle] = useState(
@@ -18,11 +19,16 @@ function App() {
   const [posts, setPosts] = useState([]);
   const [modal, setModal] = useState(false);
   const [filter, setFilter] = useState({ sort: "", searchStr: "" });
+  const [isPostLoading, setIsPostLoading] = useState(false);
   const sortedAndSearchedPosts = usePosts(posts, filter.sort, filter.searchStr);
 
   async function fetchPosts() {
-    const posts = await PostService.getAll();
-    setPosts(posts);
+    setIsPostLoading(true);
+    setTimeout(async () => {
+      const posts = await PostService.getAll();
+      setPosts(posts);
+      setIsPostLoading(false);
+    }, 1000);
   }
 
   useEffect(() => {
@@ -42,13 +48,17 @@ function App() {
       </Modal>
       <Divider />
       <PostFilter filter={filter} setFilter={setFilter} />
-      <PostList
-        postList={{
-          sortedPosts: sortedAndSearchedPosts(),
-          title,
-        }}
-        setPosts={setPosts}
-      />
+      {isPostLoading ? (
+        <Loader />
+      ) : (
+        <PostList
+          postList={{
+            sortedPosts: sortedAndSearchedPosts(),
+            title,
+          }}
+          setPosts={setPosts}
+        />
+      )}
     </div>
   );
 }

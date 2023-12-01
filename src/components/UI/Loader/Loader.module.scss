@@ -1,0 +1,22 @@
+.LoaderWrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.Loader {
+  width: 10rem;
+  height: 10rem;
+  border-radius: 50%;
+  border: 0.3rem dashed #000;
+  animation: rotate 1s infinite linear;
+}
+
+@keyframes rotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
