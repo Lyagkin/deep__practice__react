@@ -39,9 +39,7 @@ function App() {
   ]);
 
   const [modal, setModal] = useState(false);
-
   const [filter, setFilter] = useState({ sort: "", searchStr: "" });
-
   const sortedAndSearchedPosts = usePosts(posts, filter.sort, filter.searchStr);
 
   return (
