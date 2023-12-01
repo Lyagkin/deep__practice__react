@@ -2,6 +2,7 @@ import PostItem from "../postItem/PostItem";
 import EmptyPostListTitle from "../emptyPostListTitle/EmptyPostListTitle";
 
 import "./postList.scss";
+import { TransitionGroup, CSSTransition } from "react-transition-group";
 
 const PostList = (props) => {
   const { postList, setPosts } = props;
@@ -12,12 +13,9 @@ const PostList = (props) => {
 
   const showPostList = () => {
     return postList.sortedPosts.map((item, index) => (
-      <PostItem
-        key={item.id}
-        {...item}
-        postNumber={index + 1}
-        deletePost={deletePost}
-      />
+      <CSSTransition key={item.id} timeout={500} classNames="post">
+        <PostItem {...item} postNumber={index + 1} deletePost={deletePost} />
+      </CSSTransition>
     ));
   };
 
@@ -26,7 +24,9 @@ const PostList = (props) => {
   const content = renderPostList.length ? (
     <>
       <h1 className="app__title">{postList.title}</h1>
-      <div className="list__wrapper">{renderPostList}</div>
+      <div className="list__wrapper">
+        <TransitionGroup component={null}>{renderPostList}</TransitionGroup>
+      </div>
     </>
   ) : (
     <EmptyPostListTitle />
