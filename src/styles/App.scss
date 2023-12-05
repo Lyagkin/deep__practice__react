@@ -11,3 +11,15 @@
     text-align: center;
   }
 }
+
+.pages__wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 2rem;
+}
+
+.page__current {
+  border: 0.1rem solid #000;
+  border-radius: 0.5rem;
+}

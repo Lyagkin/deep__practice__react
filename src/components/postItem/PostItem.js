@@ -9,7 +9,7 @@ const PostItem = (props) => {
   return (
     <div className="item__wrapper">
       <h3 className="item__title">
-        {postNumber}. {title}
+        {id}. {title}
       </h3>
       <p className="item__body">{body}</p>
       <Button onClick={() => deletePost(id)} shortButton="shortButton">
