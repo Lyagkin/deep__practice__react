@@ -1,6 +1,4 @@
-import { useEffect, useState } from "react";
-
-import { useHistory } from "react-router-dom/cjs/react-router-dom";
+import { useEffect, useState, useRef } from "react";
 
 import PostList from "../components/postList/PostList";
 import Form from "../components/form/Form";
@@ -29,21 +27,22 @@ function Posts() {
   const [fetchPosts, isPostLoading, postError] = useFetching(
     async (limit, page) => {
       const response = await PostService.getAll(limit, page);
-      setPosts(response.data);
+      setPosts([...posts, ...response.data]);
       const totalCount = response.headers["x-total-count"];
       setTotalPages(getPageCount(totalCount, limit));
     },
   );
-
   const sortedAndSearchedPosts = usePosts(posts, filter.sort, filter.searchStr);
+
+  const lastElement = useRef();
+  const observer = useRef();
 
   useEffect(() => {
     fetchPosts(limit, page);
-  }, []);
+  }, [page]);
 
   const changePage = (page) => {
     setPage(page);
-    fetchPosts(limit, page);
   };
 
   return (
@@ -60,17 +59,15 @@ function Posts() {
       <Divider />
       <PostFilter filter={filter} setFilter={setFilter} />
       {postError && <h1 style={{ textAlign: "center" }}>{postError}</h1>}
-      {isPostLoading ? (
-        <Loader />
-      ) : (
-        <PostList
-          postList={{
-            sortedPosts: sortedAndSearchedPosts(),
-            title,
-          }}
-          setPosts={setPosts}
-        />
-      )}
+      <PostList
+        postList={{
+          sortedPosts: sortedAndSearchedPosts(),
+          title,
+        }}
+        setPosts={setPosts}
+      />
+      <div ref={lastElement} style={{ height: "2rem" }}></div>
+      {isPostLoading && <Loader />}
       <Pagination
         className="pages__wrapper"
         totalPages={totalPages}
