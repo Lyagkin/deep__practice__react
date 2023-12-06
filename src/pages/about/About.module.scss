@@ -1,0 +1,25 @@
+.mainPage {
+  background-color: rgba(210, 205, 203, 0.688);
+  width: 95%;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-transform: uppercase;
+}
+
+.mainContent {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  align-items: center;
+  justify-content: center;
+}
+
+.mainTitle {
+}
+
+.mainBody {
+  font-size: 1.3rem;
+  text-transform: uppercase;
+}

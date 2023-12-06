@@ -11,4 +11,9 @@
     flex-grow: 1;
     overflow: auto;
   }
+  &__buttons {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+  }
 }
