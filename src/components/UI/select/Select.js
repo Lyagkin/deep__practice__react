@@ -1,14 +1,14 @@
 import classes from "./Select.module.scss";
 
 const Select = (props) => {
-  const { options, defaultValue, filter, setFilter } = props;
+  const { options, defaultValue, value, onChange } = props;
 
   return (
     <div className={classes.SelectWrapper}>
       <select
         className={classes.Select}
-        value={filter.sort}
-        onChange={(e) => setFilter({ ...filter, sort: e.target.value })}
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
       >
         <option disabled value="">
           {defaultValue}

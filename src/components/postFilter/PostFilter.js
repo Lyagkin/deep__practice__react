@@ -6,7 +6,10 @@ const PostFilter = (props) => {
 
   return (
     <>
-      <Search filter={filter} setFilter={setFilter} />
+      <Search
+        value={filter.searchStr}
+        onChange={(e) => setFilter({ ...filter, searchStr: e.target.value })}
+      />
       <Select
         options={[
           { value: "title", name: "По названию" },
@@ -14,8 +17,8 @@ const PostFilter = (props) => {
           { value: "default", name: "По умолчанию" },
         ]}
         defaultValue="Сортировка по..."
-        filter={filter}
-        setFilter={setFilter}
+        value={filter.sort}
+        onChange={(e) => setFilter({ ...filter, sort: e.target.value })}
       />
     </>
   );

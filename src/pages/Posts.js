@@ -13,6 +13,8 @@ import Loader from "../components/UI/Loader/Loader";
 import { useFetching } from "../hooks/useFetching";
 import { getPageCount } from "../utils/pages";
 import Pagination from "../components/UI/pagination/Pagination";
+import { useObserver } from "../hooks/useObserver";
+import Select from "../components/UI/select/Select";
 
 function Posts() {
   const [title, setTitle] = useState(
@@ -24,6 +26,7 @@ function Posts() {
   const [limit, setLimit] = useState(10);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
+
   const [fetchPosts, isPostLoading, postError] = useFetching(
     async (limit, page) => {
       const response = await PostService.getAll(limit, page);
@@ -35,11 +38,14 @@ function Posts() {
   const sortedAndSearchedPosts = usePosts(posts, filter.sort, filter.searchStr);
 
   const lastElement = useRef();
-  const observer = useRef();
+
+  useObserver(lastElement, page < totalPages, isPostLoading, () => {
+    setPage((page) => page + 1);
+  });
 
   useEffect(() => {
     fetchPosts(limit, page);
-  }, [page]);
+  }, [page, limit]);
 
   const changePage = (page) => {
     setPage(page);
@@ -58,6 +64,17 @@ function Posts() {
       </Modal>
       <Divider />
       <PostFilter filter={filter} setFilter={setFilter} />
+      <Select
+        options={[
+          { value: 5, name: "5" },
+          { value: 10, name: "10" },
+          { value: 25, name: "25" },
+          { value: 100, name: "Показать все" },
+        ]}
+        defaultValue="Количество элементов на странице"
+        value={limit}
+        onChange={(value) => setLimit(value)}
+      />
       {postError && <h1 style={{ textAlign: "center" }}>{postError}</h1>}
       <PostList
         postList={{
